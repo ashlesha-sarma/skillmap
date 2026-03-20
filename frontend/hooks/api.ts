@@ -6,6 +6,7 @@ if (API_ROOT.endsWith("/")) API_ROOT = API_ROOT.slice(0, -1);
 if (!API_ROOT.endsWith("/api")) API_ROOT += "/api";
 
 const BASE = API_ROOT;
+console.log("SkillMap: Connecting to Backend @", BASE);
 
 async function apiFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
