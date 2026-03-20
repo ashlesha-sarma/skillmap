@@ -90,7 +90,7 @@ export default function Home() {
                     {roadmapError}
                   </div>
                   <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 8 }}>
-                    Make sure the backend is running on port 8000
+                    Make sure the backend is reachable
                   </div>
                 </div>
               </div>

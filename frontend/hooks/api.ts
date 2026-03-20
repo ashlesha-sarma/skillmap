@@ -1,6 +1,11 @@
 import type { SearchResult, Roadmap, SkillSummary, SkillDetail, Level } from "../types";
 
-const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+// Ensure the base URL ends with /api (normalized for local and production)
+let API_ROOT = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+if (API_ROOT.endsWith("/")) API_ROOT = API_ROOT.slice(0, -1);
+if (!API_ROOT.endsWith("/api")) API_ROOT += "/api";
+
+const BASE = API_ROOT;
 
 async function apiFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
