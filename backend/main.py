@@ -16,7 +16,7 @@ import logging
 from engine.database import init_db, load_skills_to_db, get_all_skills, get_connection
 from engine.state import state
 from graph.engine import GraphLoader, RoadmapEngine
-from ml.matcher import EmbeddingMatcher
+from engine.search import SkillSearch
 from api.routes import router
 
 logging.basicConfig(level=logging.INFO)
@@ -47,11 +47,10 @@ async def lifespan(app: FastAPI):
     # 4. Build roadmap engine
     state.roadmap_engine = RoadmapEngine(state.graph)
 
-    # 5. Build skill matcher (TF-IDF or embedding)
+    # 5. Build search engine (TF-IDF)
     all_skills = get_all_skills(state.db)
-    state.matcher = EmbeddingMatcher(all_skills, db_conn=state.db)
-    method = "embedding" if state.matcher._torch_available else "tfidf"
-    logger.info(f"Skill matcher ready ({method})")
+    state.matcher = SkillSearch(all_skills)
+    logger.info("Skill search engine ready (TF-IDF)")
 
     logger.info("SkillMap ready!")
     yield
@@ -83,5 +82,5 @@ def health():
     return {
         "status": "ok",
         "skills_loaded": len(state.graph.nodes) if state.graph else 0,
-        "matcher_method": "embedding" if (state.matcher and state.matcher._torch_available) else "tfidf",
+        "matcher_method": "tfidf",
     }
