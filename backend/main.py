@@ -66,9 +66,18 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# ──────────────────────────────────────────────
+# CORS Logic
+# ──────────────────────────────────────────────
+origins = [
+    "http://localhost:3000",
+    "https://skillmap-eight.vercel.app",
+    "https://skillmap-inftm2b9z-ashleshas-projects-c2693ad0.vercel.app"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
