@@ -231,7 +231,8 @@ class RoadmapEngine:
         """Generate a deterministic learning roadmap.
 
         Levels:
-        - beginner: Foundations (Layer 0) + connected Goal
+        - beginner: Foundations (First 3 layers) + Goal
+        - intermediate: Intermediate depth (First 6 layers) + Goal
         - advanced: Full Graph
         """
         if skill_id not in self.graph.nodes:
@@ -242,17 +243,26 @@ class RoadmapEngine:
         layers = self._compute_layers(full_subgraph)
         max_layer = max(layers.values()) if layers else 0
 
-        # Calculate nodes for Beginner level (Layer 0 + Goal)
-        beginner_ids = [
-            nid for nid, lay in layers.items()
-            if lay <= 0 or nid == skill_id
-        ]
+        # Calculate nodes for each level based on documentation filters
+        # beginner=3 layers, intermediate=6 layers, advanced=all
+        beginner_ids = [nid for nid, lay in layers.items() if lay < 3 or nid == skill_id]
+        intermediate_ids = [nid for nid, lay in layers.items() if lay < 6 or nid == skill_id]
         
-        # Available levels logic
-        if target_node.category == "soft_skills" or len(beginner_ids) == len(layers) or max_layer == 0:
-            avail = ["beginner"]
-        else:
-            avail = ["beginner", "advanced"]
+        # Available levels logic based on actual complexity
+        avail = ["beginner"]
+        if max_layer >= 3 and len(intermediate_ids) > len(beginner_ids):
+            avail.append("intermediate")
+        if max_layer >= 6 and len(layers) > len(intermediate_ids):
+            avail.append("advanced")
+        elif "advanced" not in avail and len(layers) > len(beginner_ids):
+            # Ensure advanced is present if it's actually larger than beginner
+            if "intermediate" not in avail:
+                avail.append("advanced")
+            else:
+                avail.append("advanced")
+        
+        # Deduplicate and ensure at least one level
+        avail = sorted(list(set(avail)), key=lambda x: ["beginner", "intermediate", "advanced"].index(x))
 
         if level not in avail:
             level = avail[-1]
@@ -260,6 +270,8 @@ class RoadmapEngine:
         # Filter nodes based on requested level
         if level == "beginner":
             visible_ids = beginner_ids
+        elif level == "intermediate":
+            visible_ids = intermediate_ids
         else:
             visible_ids = list(layers.keys())
 

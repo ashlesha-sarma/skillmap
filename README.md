@@ -19,7 +19,7 @@ A production-grade, offline-first web application that generates structured lear
 │   /api/roadmap/{id}    →  RoadmapEngine (Kahn's Topo Sort)  │
 │   /api/skills/all      →  SQLite skills table               │
 │                                                              │
-│   Knowledge Graph: 54 skills, 97 edges (DAG, no cycles)     │
+│   Knowledge Graph: 77 skills, 119 edges (DAG, no cycles)     │
 │   Datasets: skills_graph.json (roadmap.sh + Wikidata normalized) │
 └──────────────────────────────────────────────────────────────┘
 ```
@@ -47,15 +47,15 @@ A production-grade, offline-first web application that generates structured lear
 cd skillmap/backend
 
 # Create virtual environment (recommended)
-python3 -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
+python -m venv venv
+venv\Scripts\activate
 
 # Install dependencies
 pip install fastapi uvicorn networkx sqlite-utils pydantic httpx numpy scipy python-multipart
 
-# For semantic search (optional but recommended):
+# For semantic search (optional):
 pip install torch sentence-transformers
-# Falls back to TF-IDF automatically if torch is not installed
+# Falls back to TF-IDF automatically
 
 # Start backend
 python run.py
@@ -130,7 +130,7 @@ Generate deterministic roadmap. Levels: `beginner` | `intermediate` | `advanced`
 
 ---
 
-## Skills Catalog (48 skills)
+## Skills Catalog (77 skills)
 
 ### Tech (20)
 Web Development, Frontend Development, Backend Development, Full Stack Development, Software Engineering, React, Python, JavaScript, SQL, Data Science, Machine Learning, AI, Data Engineering, System Design, API Development, HTTP & Web Protocols, Linux, Networking, Cloud Computing, DevOps, Docker, Kubernetes

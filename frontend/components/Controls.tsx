@@ -4,6 +4,7 @@ import type { Level } from "../types";
 
 const LEVELS: { value: Level; label: string }[] = [
   { value: "beginner",     label: "Beginner" },
+  { value: "intermediate", label: "Intermediate" },
   { value: "advanced",     label: "Advanced" },
 ];
 

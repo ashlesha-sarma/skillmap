@@ -1,9 +1,11 @@
 import type { SearchResult, Roadmap, SkillSummary, SkillDetail, Level } from "../types";
 
-// Ensure the base URL ends with /api (normalized for local and production)
-let API_ROOT = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
-if (API_ROOT.endsWith("/")) API_ROOT = API_ROOT.slice(0, -1);
-if (!API_ROOT.endsWith("/api")) API_ROOT += "/api";
+// Robust API URL normalization (handles trailing slashes and avoids double /api)
+let API_ROOT = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").trim();
+API_ROOT = API_ROOT.replace(/\/+$/, ""); // Remove all trailing slashes
+if (!API_ROOT.toLowerCase().endsWith("/api")) {
+  API_ROOT = `${API_ROOT}/api`;
+}
 
 const BASE = API_ROOT;
 console.log("SkillMap: Connecting to Backend @", BASE);

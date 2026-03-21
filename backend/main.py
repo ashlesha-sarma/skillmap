@@ -71,6 +71,7 @@ app = FastAPI(
 # ──────────────────────────────────────────────
 origins = [
     "http://localhost:3000",
+    "http://127.0.0.1:3000", # Added for local loopback consistency
     "https://skillmap-eight.vercel.app",
     "https://skillmap-inftm2b9z-ashleshas-projects-c2693ad0.vercel.app"
 ]

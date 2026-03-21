@@ -100,6 +100,7 @@ export default function GraphView({ roadmap }: Props) {
 
 
 
+  // Effect 1: Handle initial roadmap load and layout
   useEffect(() => {
     const { nodes, edges } = roadmap;
     const positions = computeLayout(nodes, edges);
@@ -139,7 +140,28 @@ export default function GraphView({ roadmap }: Props) {
 
     setRfNodes(newNodes);
     setRfEdges(newEdges);
-  }, [roadmap, selectedNode, setSelectedNode, setRfNodes, setRfEdges]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roadmap, setRfNodes, setRfEdges, setSelectedNode]);
+
+  // Effect 2: Handle selection changes without resetting positions
+  useEffect(() => {
+    setRfNodes((nds) =>
+      nds.map((node) => ({
+        ...node,
+        data: {
+          ...node.data,
+          isSelected: selectedNode?.id === node.id,
+        },
+      }))
+    );
+
+    setRfEdges((eds) =>
+      eds.map((edge) => ({
+        ...edge,
+        animated: selectedNode?.id === edge.target || selectedNode?.id === edge.source,
+      }))
+    );
+  }, [selectedNode, setRfNodes, setRfEdges]);
 
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: any) => {
