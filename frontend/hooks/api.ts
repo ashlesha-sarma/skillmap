@@ -1,7 +1,7 @@
 import type { SearchResult, Roadmap, SkillSummary, SkillDetail, Level } from "../types";
 
 // Robust API URL normalization (handles trailing slashes and avoids double /api)
-let API_ROOT = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").trim();
+let API_ROOT = (process.env.NEXT_PUBLIC_API_URL || "https://skillmap-backend-wigj.onrender.com").trim();
 API_ROOT = API_ROOT.replace(/\/+$/, ""); // Remove all trailing slashes
 if (!API_ROOT.toLowerCase().endsWith("/api")) {
   API_ROOT = `${API_ROOT}/api`;

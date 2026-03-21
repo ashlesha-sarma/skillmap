@@ -67,18 +67,20 @@ app = FastAPI(
 )
 
 # ──────────────────────────────────────────────
-# CORS Logic
+# CORS Logic (Securely restricted)
 # ──────────────────────────────────────────────
 origins = [
     "http://localhost:3000",
-    "http://127.0.0.1:3000", # Added for local loopback consistency
+    "http://127.0.0.1:3000",
     "https://skillmap-eight.vercel.app",
-    "https://skillmap-inftm2b9z-ashleshas-projects-c2693ad0.vercel.app"
+    "https://skillmap-pqq9i1dlo-ashleshas-projects-c2693ad0.vercel.app",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    # Allow all previews from this project securely via regex
+    allow_origin_regex=r"https://skillmap-.*-ashleshas-projects-.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
