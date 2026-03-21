@@ -33,21 +33,21 @@ async def lifespan(app: FastAPI):
     init_db()
     state.db = get_connection()
 
-    # 2. Load graph from dataset
+    # 2. Load graph
     loader = GraphLoader(DATASET_PATH)
     state.graph = loader.load()
     logger.info(f"Loaded graph: {len(state.graph.nodes)} skills, {sum(len(v) for v in state.graph.adj.values())} edges")
 
-    # 3. Persist to SQLite
+    # 3. Persist skills
     load_skills_to_db(state.graph)
     state.db.execute("DELETE FROM roadmap_cache")
     state.db.commit()
     logger.info("Skills stored in SQLite")
 
-    # 4. Build roadmap engine
+    # 4. Roadmap engine
     state.roadmap_engine = RoadmapEngine(state.graph)
 
-    # 5. Build search engine (TF-IDF)
+    # 5. Search engine
     all_skills = get_all_skills(state.db)
     state.matcher = SkillSearch(all_skills)
     logger.info("Skill search engine ready (TF-IDF)")
@@ -67,24 +67,20 @@ app = FastAPI(
 )
 
 # ──────────────────────────────────────────────
-# CORS Logic (Securely restricted)
+# ✅ FINAL CORS CONFIG (FIXED)
 # ──────────────────────────────────────────────
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://skillmap-eight.vercel.app",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    # Allow all previews from this project securely via regex
-    allow_origin_regex=r"https://skillmap-.*-ashleshas-projects-.*\.vercel\.app",
+    allow_origins=[
+        "http://localhost:3000",
+        "https://skillmap-eight.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# API routes
 app.include_router(router, prefix="/api")
 
 

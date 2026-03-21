@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """
 SkillMap — Backend startup script
-Run: python run.py
 """
+import os
 import uvicorn
 
 if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Render uses PORT env var
+
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8000,
-        reload=True,
-        reload_dirs=["./"],
+        port=port,
+        reload=False,  # IMPORTANT: disable reload in production
         log_level="info",
     )
