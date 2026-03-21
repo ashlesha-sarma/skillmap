@@ -73,7 +73,6 @@ origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://skillmap-eight.vercel.app",
-    "https://skillmap-pqq9i1dlo-ashleshas-projects-c2693ad0.vercel.app",
 ]
 
 app.add_middleware(
